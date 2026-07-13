@@ -1,0 +1,162 @@
+---
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<div class="recommend-box" data-recommend-box data-slug={slug}>
+  <p class="recommend-count">
+    <span>♥ ผู้อ่านแนะนำ</span>
+    <strong data-recommend-count>—</strong>
+    <span>คน</span>
+  </p>
+
+  <button type="button" data-recommend-button>
+    ✦ แนะนำเรื่องนี้
+  </button>
+
+  <span
+    class="recommend-message"
+    data-recommend-message
+    aria-live="polite"
+  ></span>
+</div>
+
+<script>
+  import {
+    addRecommendation,
+    getRecommendationCount,
+  } from "../lib/recommend";
+
+  const boxes =
+    document.querySelectorAll<HTMLElement>("[data-recommend-box]");
+
+  boxes.forEach((box) => {
+    if (box.dataset.initialized === "true") return;
+    box.dataset.initialized = "true";
+
+    const slug = box.dataset.slug;
+    const countElement =
+      box.querySelector<HTMLElement>("[data-recommend-count]");
+    const button =
+      box.querySelector<HTMLButtonElement>("[data-recommend-button]");
+    const message =
+      box.querySelector<HTMLElement>("[data-recommend-message]");
+
+    if (!slug || !countElement || !button || !message) return;
+
+    const storageKey = `waifu-fs-recommended:${slug}`;
+
+    function setRecommendedState() {
+      button.disabled = true;
+      button.textContent = "♥ แนะนำแล้ว";
+      button.classList.add("recommended");
+    }
+
+    async function loadCount() {
+      try {
+        const count = await getRecommendationCount(slug);
+        countElement.textContent = String(count);
+      } catch (error) {
+        console.error(error);
+        countElement.textContent = "0";
+        message.textContent = "ไม่สามารถโหลดยอดแนะนำได้";
+        button.disabled = true;
+      }
+    }
+
+    if (localStorage.getItem(storageKey) === "true") {
+      setRecommendedState();
+    }
+
+    button.addEventListener("click", async () => {
+      if (localStorage.getItem(storageKey) === "true") {
+        setRecommendedState();
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "กำลังบันทึก...";
+      message.textContent = "";
+
+      try {
+        const newCount = await addRecommendation(slug);
+
+        countElement.textContent = String(newCount);
+        localStorage.setItem(storageKey, "true");
+        setRecommendedState();
+      } catch (error) {
+        console.error(error);
+        button.disabled = false;
+        button.textContent = "✦ แนะนำเรื่องนี้";
+        message.textContent = "บันทึกไม่สำเร็จ กรุณาลองใหม่";
+      }
+    });
+
+    loadCount();
+  });
+</script>
+
+<style>
+  .recommend-box {
+    margin-top: 18px;
+    border: 1px solid rgba(193, 143, 196, 0.18);
+    border-radius: 14px;
+    padding: 16px;
+    background: rgba(21, 17, 27, 0.86);
+  }
+
+  .recommend-count {
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #e183b5;
+  text-align: center;
+}
+
+.recommend-count strong {
+  color: #f1a8ce;
+  font-weight: 800;
+}
+
+  .recommend-box button {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 13px;
+    color: white;
+    background: linear-gradient(135deg, #8d557f, #c14f8b);
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease;
+  }
+
+  .recommend-box button:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .recommend-box button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .recommend-box button.recommended {
+    color: #f3dbe8;
+    background: #55404f;
+  }
+
+  .recommend-message {
+    display: block;
+    min-height: 1.4em;
+    margin-top: 8px;
+    color: #d9a7bd;
+    font-size: 0.76rem;
+    text-align: center;
+  }
+</style>

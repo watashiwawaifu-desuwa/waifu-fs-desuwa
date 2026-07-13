@@ -1,0 +1,901 @@
+---
+import { works } from "../data/works";
+import { banners } from "../data/banners";
+import { supabase } from "../lib/supabase";
+
+const { data } = await supabase
+  .from("works")
+  .select("slug,recommendations");
+
+const recommendationMap = new Map(
+  (data ?? []).map((item) => [item.slug, item.recommendations])
+);
+
+const rankedWorks = [...works].sort((a, b) => {
+  const countA = Number(recommendationMap.get(a.slug) ?? 0);
+  const countB = Number(recommendationMap.get(b.slug) ?? 0);
+
+  return countB - countA;
+});
+
+const activeBanners = banners
+  .filter((banner) => banner.active)
+  .map((banner) => {
+    const work = works.find((item) => item.slug === banner.slug);
+
+    return {
+      ...banner,
+      work,
+    };
+  })
+  .filter((banner) => banner.work)
+  .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0));
+---
+
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="รวมผลงานและช่องทางอ่านของ Waifu-FS" />
+    <title>Waifu-FS</title>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="/">Waifu-<span>FS</span></a>
+
+        <nav>
+          <a class="active" href="/">หน้าแรก</a>
+        </nav>
+
+        <div class="header-tools">
+          <label class="search">
+            <span>⌕</span>
+            <input type="search" placeholder="ค้นหาเรื่อง ชื่อเรื่อง หรือแท็ก..." />
+          </label>
+          <button type="button" class="profile" aria-label="บัญชีผู้ใช้">◎</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero" data-banner-slider>
+  {
+    activeBanners.map((banner, index) => (
+      <article
+        class:list={["hero-slide", index === 0 && "active"]}
+        data-banner-slide
+      >
+        <img
+          src={banner.image}
+          alt={`แบนเนอร์เรื่อง ${banner.work!.title}`}
+          class="hero-image"
+        />
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+          <p class="eyebrow">เรื่องแนะนำ</p>
+          <h1>{banner.work!.title}</h1>
+
+<a
+            href={`/title/${banner.work!.slug}`}
+            class="primary-button"
+          >
+            ดูรายละเอียด
+          </a>
+        </div>
+      </article>
+    ))
+  }
+
+  <div class="hero-dots">
+    {
+      activeBanners.map((_, index) => (
+        <button
+          type="button"
+          class:list={["hero-dot", index === 0 && "active"]}
+          data-banner-dot
+          aria-label={`ดูแบนเนอร์ที่ ${index + 1}`}
+        ></button>
+      ))
+    }
+  </div>
+</section>
+
+      <div class="content-layout">
+        <section class="main-column" id="latest">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">✦ นิยายแปล</p>
+              <h2></h2>
+            </div>
+            <a href="#all-works">ดูทั้งหมด ›</a>
+          </div>
+
+          <div class="work-grid">
+            {works.map((work) => (
+              <a class="work-card" href={`/title/${work.slug}`}>
+                <div class="cover-wrap">
+                  <img src={work.cover} alt={`ปกเรื่อง ${work.title}`} loading="lazy" />
+                  <span class="type-badge">{work.type}</span>
+                  <span class:list={["status-badge", work.status === "จบแล้ว" && "finished"]}>
+                    {work.status}
+                  </span>
+                  <span class="recommend-badge">
+                    ♥ <strong
+                      data-home-recommend-count
+                      data-slug={work.slug}
+                    >
+                      {recommendationMap.get(work.slug) ?? 0}
+                    </strong>
+                  </span>
+                </div>
+
+                <div class="card-body">
+                  <h3>{work.title}</h3>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          
+        </section>
+
+        <aside class="sidebar">
+          <section class="reader-picks">
+            <h2>✦ แนะนำจากผู้อ่าน</h2>
+            <p class="sidebar-note"></p>
+
+            <ol>
+              {rankedWorks.map((work, index) => (
+                <li>
+                  <a class="rank-link" href={`/title/${work.slug}`}>
+                    <span class="rank">
+                      {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
+                    </span>
+
+                    <img src={work.cover} alt={`ปกเรื่อง ${work.title}`} />
+
+                    <div>
+                      <h3>{work.title}</h3>
+                      <p>
+                        ♥ ผู้อ่านแนะนำ {recommendationMap.get(work.slug) ?? 0} คน
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ol>
+
+            <a href="#all-works" class="outline-button">ดูเรื่องที่ผู้อ่านแนะนำทั้งหมด</a>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <footer id="about">
+      <div class="shell footer-inner">
+        <div>
+          <a class="brand" href="/">Waifu-<span>FS</span></a>
+          <p></p>
+        </div>
+        <p>© 2026 Waifu-FS</p>
+      </div>
+    </footer>
+  </body>
+</html>
+<script>
+  const slider = document.querySelector<HTMLElement>("[data-banner-slider]");
+
+  if (slider) {
+    const slides = Array.from(
+      slider.querySelectorAll<HTMLElement>("[data-banner-slide]")
+    );
+
+    const dots = Array.from(
+      slider.querySelectorAll<HTMLButtonElement>("[data-banner-dot]")
+    );
+
+    let currentIndex = 0;
+    let timer: number | undefined;
+
+    function showSlide(index: number) {
+      if (slides.length === 0) return;
+
+      currentIndex = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("active", slideIndex === currentIndex);
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle("active", dotIndex === currentIndex);
+      });
+    }
+
+    function startAutoSlide() {
+      window.clearInterval(timer);
+
+      if (slides.length <= 1) return;
+
+      timer = window.setInterval(() => {
+        showSlide(currentIndex + 1);
+      }, 6000);
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        showSlide(index);
+        startAutoSlide();
+      });
+    });
+
+    slider.addEventListener("mouseenter", () => {
+      window.clearInterval(timer);
+    });
+
+    slider.addEventListener("mouseleave", () => {
+      startAutoSlide();
+    });
+
+    showSlide(0);
+    startAutoSlide();
+  }
+</script>
+<style>
+  :root {
+    font-family:
+      Inter, "Noto Sans Thai", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", sans-serif;
+    color: #f7f3f8;
+    background: #090810;
+
+    --bg: #090810;
+    --surface: #111019;
+    --surface-2: #17131e;
+    --border: rgba(193, 143, 196, 0.16);
+    --text: #f7f3f8;
+    --muted: #aaa2af;
+    --pink: #d25b98;
+    --pink-soft: #e183b5;
+    --purple: #6d527c;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    margin: 0;
+    background:
+      radial-gradient(circle at 75% 0%, rgba(111, 78, 129, 0.16), transparent 34rem),
+      radial-gradient(circle at 0% 42%, rgba(210, 91, 152, 0.08), transparent 28rem),
+      #090810;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  .shell {
+    width: min(1480px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+    background: rgba(9, 8, 16, 0.84);
+    backdrop-filter: blur(18px);
+  }
+
+  .header-inner {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    gap: 38px;
+  }
+
+  .brand {
+    flex: 0 0 auto;
+    font-size: 1.65rem;
+    font-weight: 900;
+    letter-spacing: -0.055em;
+  }
+
+  .brand span {
+    color: var(--pink);
+  }
+
+  nav {
+    display: flex;
+    gap: 32px;
+    color: #bcb4c1;
+  }
+
+  nav a {
+    position: relative;
+    padding: 27px 0 24px;
+  }
+
+  nav a:hover,
+  nav a.active {
+    color: var(--pink-soft);
+  }
+
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--pink), transparent);
+  }
+
+  .header-tools {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .search {
+    width: min(340px, 26vw);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 16px;
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    color: white;
+    background: transparent;
+  }
+
+  .search input::placeholder {
+    color: #77717f;
+  }
+
+  .profile {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(210, 91, 152, 0.65);
+    border-radius: 50%;
+    color: white;
+    background: rgba(210, 91, 152, 0.08);
+  }
+
+  main {
+    padding-top: 24px;
+    padding-bottom: 70px;
+  }
+
+  .hero {
+    position: relative;
+    min-height: 410px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #120f18;
+  }
+  .hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 500ms ease,
+    visibility 500ms ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+  .hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 26%;
+    filter: saturate(0.82) brightness(0.72);
+    transform: scale(1.02);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(8, 7, 12, 0.96) 0%, rgba(13, 10, 18, 0.8) 35%, rgba(15, 10, 19, 0.15) 70%),
+      linear-gradient(0deg, rgba(8, 7, 12, 0.45), transparent 55%);
+  }
+
+  .hero-content {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    bottom: 0;
+    max-width: 650px;
+    padding: 0 64px 64px;
+  }
+
+  .eyebrow,
+  .section-kicker {
+    margin: 0 0 10px;
+    color: var(--pink);
+    font-weight: 850;
+  }
+
+  .hero h1 {
+  margin: 0 0 16px;
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+  .primary-button,
+  .outline-button {
+    display: inline-flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    padding: 0 22px;
+    font-weight: 800;
+  }
+
+  .primary-button {
+    color: white;
+    background: linear-gradient(135deg, #8d557f, #c14f8b);
+    box-shadow: 0 12px 30px rgba(193, 79, 139, 0.22);
+  }
+
+  .hero-dots {
+    position: absolute;
+    z-index: 3;
+    bottom: 18px;
+    left: 50%;
+    display: flex;
+    gap: 7px;
+    transform: translateX(-50%);
+  }
+
+  .hero-dot {
+  width: 8px;
+  height: 8px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: #655f69;
+  cursor: pointer;
+}
+
+.hero-dot.active {
+  width: 24px;
+  border-radius: 999px;
+  background: var(--pink);
+}
+
+  .content-layout {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .section-heading {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    color: #aaa2af;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .section-heading > a {
+    color: #9c94a2;
+    font-size: 0.92rem;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .work-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #15121b, #100e15);
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .work-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(210, 91, 152, 0.55);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  .cover-wrap {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: #17131d;
+  }
+
+  .cover-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 260ms ease;
+  }
+
+  .work-card:hover .cover-wrap img {
+    transform: scale(1.04);
+  }
+
+  .type-badge,
+  .status-badge {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 6px;
+    padding: 5px 8px;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    backdrop-filter: blur(8px);
+  }
+
+  .type-badge {
+    left: 10px;
+    background: rgba(155, 69, 125, 0.84);
+  }
+
+  .status-badge {
+  right: 10px;
+  background: rgba(194, 65, 12, 0.85); /* ส้ม */
+  border: 1px solid #EA580C;
+  color: #FFEDD5;
+}
+
+.status-badge.finished {
+  background: rgba(127, 29, 29, 0.85); /* แดงไวน์ */
+  border: 1px solid #991B1B;
+  color: #FECACA;
+}
+
+  .recommend-badge {
+    position: absolute;
+    z-index: 2;
+    right: 8px;
+    bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid rgba(210, 91, 152, 0.35);
+    border-radius: 999px;
+    padding: 4px 9px 4px 8px;
+    color: var(--pink-soft);
+    background: rgba(10, 8, 14, 0.72);
+    backdrop-filter: blur(6px);
+    font-size: 0.74rem;
+    font-weight: 800;
+  }
+
+  .recommend-badge strong {
+    color: white;
+  }
+
+  .card-body {
+    padding: 16px 16px 15px;
+  }
+
+  .card-body h3 {
+    min-height: 3.5em;
+    margin: 0;
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 100px;
+  }
+
+  .reader-picks {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    background: linear-gradient(180deg, rgba(28, 22, 34, 0.84), rgba(15, 13, 20, 0.96));
+  }
+
+  .reader-picks h2 {
+    margin: 0 0 8px;
+    font-size: 1.08rem;
+  }
+
+  .sidebar-note {
+    margin: 0 0 18px;
+    color: #8e8794;
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .reader-picks ol {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+  }
+
+  .rank-link {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 38px 54px minmax(0, 1fr);
+    align-items: center;
+    gap: 11px;
+    border-radius: 10px;
+    padding: 4px;
+    margin: -4px;
+    transition: background 160ms ease;
+  }
+
+  .rank-link:hover {
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .rank-link img {
+    width: 54px;
+    aspect-ratio: 2 / 3;
+    border-radius: 7px;
+    object-fit: cover;
+  }
+
+  .rank {
+    font-size: 1.05rem;
+  }
+
+  .rank-link div {
+    min-width: 0;
+  }
+
+  .reader-picks h3 {
+    margin: 0 0 4px;
+    overflow: hidden;
+    font-size: 0.86rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rank-link p {
+    margin: 0;
+    color: var(--pink-soft);
+    font-size: 0.73rem;
+  }
+
+  .outline-button {
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    color: #b3abb8;
+    background: transparent;
+  }
+
+  .discover {
+    margin-top: 44px;
+  }
+
+  .section-heading.compact {
+    margin-bottom: 14px;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .filter-row button {
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 16px;
+    color: #aaa2af;
+    background: rgba(255, 255, 255, 0.025);
+    cursor: pointer;
+  }
+
+  .filter-row button.active,
+  .filter-row button:hover {
+    border-color: rgba(210, 91, 152, 0.48);
+    color: #f7edf4;
+    background: rgba(210, 91, 152, 0.11);
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 34px 0;
+    background: rgba(10, 9, 15, 0.94);
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .footer-inner p {
+    margin: 8px 0 0;
+    color: #8e8794;
+  }
+
+  @media (max-width: 1100px) {
+    nav {
+      display: none;
+    }
+
+    .content-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      position: static;
+    }
+
+    .work-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .shell {
+      width: min(100% - 24px, 1480px);
+    }
+
+    .search {
+      display: none;
+    }
+
+    .hero {
+      min-height: 380px;
+    }
+
+    .hero-content {
+      max-width: none;
+      padding: 0 22px 76px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.75rem, 7.4vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-image {
+      object-position: center 22%;
+      transform: none;
+    }
+
+    .hero-overlay {
+      background:
+        linear-gradient(
+          0deg,
+          rgba(8, 7, 12, 0.96) 0%,
+          rgba(10, 8, 14, 0.62) 48%,
+          rgba(10, 8, 14, 0.18) 100%
+        );
+    }
+
+    .primary-button {
+      width: 200px;
+      min-height: 38px;
+      align-self: center;
+      padding: 0 18px;
+      font-size: 0.9rem;
+    }
+
+    .work-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .footer-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .brand {
+      font-size: 1.35rem;
+    }
+
+    .profile {
+      width: 38px;
+      height: 38px;
+    }
+
+    .hero {
+      min-height: 360px;
+    }
+
+    .hero-content {
+      padding: 0 18px 68px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.65rem, 7.5vw, 2.05rem);
+    }
+
+    .primary-button {
+      width: 190px;
+      min-height: 38px;
+    }
+
+    .card-body {
+      padding: 13px;
+    }
+
+    .card-body h3 {
+      font-size: 0.88rem;
+    }
+
+    .reader-picks {
+      padding: 18px;
+    }
+  }
+</style>
