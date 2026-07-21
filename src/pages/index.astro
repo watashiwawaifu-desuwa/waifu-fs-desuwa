@@ -149,11 +149,11 @@ const activeBanners = banners
             <h2>✦ แนะนำจากผู้อ่าน</h2>
             <p class="sidebar-note"></p>
 
-            <ol>
+            <ol data-reader-ranking>
               {rankedWorks.map((work, index) => (
-                <li>
+                  <li data-rank-item data-slug={work.slug}>
                   <a class="rank-link" href={`/title/${work.slug}`}>
-                    <span class="rank">
+                    <span class="rank" data-rank-medal>
                       {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                     </span>
 
@@ -162,8 +162,15 @@ const activeBanners = banners
                     <div>
                       <h3>{work.title}</h3>
                       <p>
-                        ♥ ผู้อ่านแนะนำ {recommendationMap.get(work.slug) ?? 0} คน
-                      </p>
+  ♥ ผู้อ่านแนะนำ{" "}
+  <span
+    data-sidebar-recommend-count
+    data-slug={work.slug}
+  >
+    {recommendationMap.get(work.slug) ?? 0}
+  </span>{" "}
+  คน
+</p>
                     </div>
                   </a>
                 </li>
@@ -188,6 +195,8 @@ const activeBanners = banners
   </body>
 </html>
 <script>
+  import { supabase } from "../lib/supabase";
+
   const slider = document.querySelector<HTMLElement>("[data-banner-slider]");
 
   if (slider) {
@@ -241,9 +250,86 @@ const activeBanners = banners
       startAutoSlide();
     });
 
-    showSlide(0);
+     showSlide(0);
     startAutoSlide();
   }
+
+  async function refreshRecommendations() {
+    const { data, error } = await supabase
+      .from("works")
+      .select("slug,recommendations");
+
+    if (error) {
+      console.error("ไม่สามารถโหลดคะแนนแนะนำได้:", error);
+      return;
+    }
+
+    const liveRecommendationMap = new Map(
+      (data ?? []).map((item) => [
+        item.slug,
+        Number(item.recommendations ?? 0),
+      ])
+    );
+
+    document
+      .querySelectorAll<HTMLElement>("[data-home-recommend-count]")
+      .forEach((element) => {
+        const slug = element.dataset.slug;
+
+        if (!slug) return;
+
+        element.textContent = String(
+          liveRecommendationMap.get(slug) ?? 0
+        );
+      });
+
+    document
+      .querySelectorAll<HTMLElement>("[data-sidebar-recommend-count]")
+      .forEach((element) => {
+        const slug = element.dataset.slug;
+
+        if (!slug) return;
+
+        element.textContent = String(
+          liveRecommendationMap.get(slug) ?? 0
+        );
+      });
+
+    const rankingList =
+      document.querySelector<HTMLOListElement>("[data-reader-ranking]");
+
+    if (!rankingList) return;
+
+    const rankingItems = Array.from(
+      rankingList.querySelectorAll<HTMLElement>("[data-rank-item]")
+    );
+
+    rankingItems.sort((a, b) => {
+      const countA =
+        liveRecommendationMap.get(a.dataset.slug ?? "") ?? 0;
+
+      const countB =
+        liveRecommendationMap.get(b.dataset.slug ?? "") ?? 0;
+
+      return countB - countA;
+    });
+
+    const medals = ["🥇", "🥈", "🥉"];
+
+    rankingItems.forEach((item, index) => {
+      const medal = item.querySelector<HTMLElement>(
+        "[data-rank-medal]"
+      );
+
+      if (medal) {
+        medal.textContent = medals[index] ?? String(index + 1);
+      }
+
+      rankingList.appendChild(item);
+    });
+  }
+
+  refreshRecommendations();
 </script>
 <style>
   :root {

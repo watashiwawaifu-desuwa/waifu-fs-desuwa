@@ -39,11 +39,11 @@ export const works = [
   platforms: [
     {
       id: "kairew",
-      url: "https://kairew.com/novel/WatashiWa/75-surviving-the-assassin-academy-as-a-professor",
+      url: "https://kairew.com/novel/WatashiWa/5566-i-became-the-necromancer-of-the-academy",
     },
     {
       id: "readrealm",
-      url: "https://kairew.com/novel/WatashiWa/5566-i-became-the-necromancer-of-the-academy",
+      url: "https://readrealm.co/novel/xyKQbpenAL9pOM7E8JZA",
     },
     {
       id: "readtoon",
