@@ -1,6 +1,6 @@
 export const works = [
   {
-    slug: "professor",
+    slug: "surviving-the-assassin-academy-as-a-professor",
     title: "ศาสตราจารย์อัจฉริยะแห่งโรงเรียนลอบสังหาร",
     type: "นิยาย",
     status: "จบแล้ว",
@@ -26,7 +26,7 @@ export const works = [
   ],
 },
   {
-    slug: "necromancer",
+    slug: "i-became-the-necromancer-of-the-academy",
     title: "กลายเป็นเนโครแมนเซอร์แห่งสถาบัน",
     type: "นิยาย",
     status: "กำลังอัปเดต",
@@ -52,7 +52,7 @@ export const works = [
   ],
 },
   {
-    slug: "chaebol",
+    slug: "returning-chaebol-heir-delivers-sweet-revenge",
     title: "การกลับมาของหลานชายตระกูลแชโบล คราวนี้จะขอเอาคืน",
     type: "นิยาย",
     status: "กำลังอัปเดต",
@@ -74,6 +74,32 @@ export const works = [
     {
       id: "readtoon",
       url: "https://readtoon.com/content/returning-chaebol-heir-delivers-sweet-revenge",
+    },
+  ],
+},
+{
+    slug: "im-a-young-god-wont-you-raise-me",
+    title: "ผมเป็นเทพตัวน้อย ช่วยเลี้ยงดูผมหน่อยสิ",
+    type: "นิยาย",
+    status: "กำลังอัปเดต",
+    episode: 0,
+    cover: "/covers/im-a-young-god-wont-you-raise-me.jpg",
+    recommendations: 0,
+    description: "ฮันโกโย ชายหนุ่มผู้ใช้ชีวิตอย่างโดดเดี่ยว ได้รับเกมปริศนาจากผู้พัฒนาลึกลับและใช้เวลาสองปีทดสอบเกมเหล่านั้น โดยไม่รู้เลยว่าแต่ละเกมคือบททดสอบ ที่มีอยู่จริงในโลก จนกระทั่งเขาถูกดูดเข้าไปในบททดสอบนั้นด้วย แต่สิ่งที่ทำให้ฮันโกโยแตกต่างจากคนอื่น คือเขาเป็นเพียงคนเดียวที่เคยเคลียร์เกมเหล่านั้นจนถึงทรูเอนด์ดิ้งได้ และสิทธิปริศนา ในฐานะระบบ ที่เขาได้รับ จะช่วยให้เขาเอาชีวิตรอดไปได้หรือไม่",
+    tags: ["ระบบ", "เอาชีวิตรอด", "พัฒนาตัวเอง", "อัจฉริยะ"],
+    
+  platforms: [
+    {
+      id: "kairew",
+      url: "https://kairew.com/novel/WatashiWa/6067-im-a-young-god-wont-you-raise-me",
+    },
+    {
+      id: "readrealm",
+      url: "https://readrealm.co/novel/d7ylEJ53xp8o3PZ6wML2",
+    },
+    {
+      id: "readtoon",
+      url: "https://readtoon.com/content/im-a-young-god-wont-you-raise-me",
     },
   ],
 },
