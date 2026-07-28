@@ -150,11 +150,11 @@ const activeBanners = banners
             <p class="sidebar-note"></p>
 
             <ol data-reader-ranking>
-              {rankedWorks.map((work, index) => (
+              {rankedWorks.slice(0, 10).map((work, index) => (
                   <li data-rank-item data-slug={work.slug}>
                   <a class="rank-link" href={`/title/${work.slug}`}>
-                    <span class="rank" data-rank-medal>
-                      {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
+                    <span class="rank" data-rank-number>
+                      {index + 1}
                     </span>
 
                     <img src={work.cover} alt={`ปกเรื่อง ${work.title}`} />
@@ -314,19 +314,18 @@ const activeBanners = banners
       return countB - countA;
     });
 
-    const medals = ["🥇", "🥈", "🥉"];
-
     rankingItems.forEach((item, index) => {
-      const medal = item.querySelector<HTMLElement>(
-        "[data-rank-medal]"
-      );
+  const rankNumber = item.querySelector<HTMLElement>(
+    "[data-rank-number]"
+  );
 
-      if (medal) {
-        medal.textContent = medals[index] ?? String(index + 1);
-      }
+  if (rankNumber) {
+    rankNumber.textContent = String(index + 1);
+  }
 
-      rankingList.appendChild(item);
-    });
+  item.hidden = index >= 10;
+  rankingList.appendChild(item);
+});
   }
 
   refreshRecommendations();
@@ -791,8 +790,25 @@ const activeBanners = banners
   }
 
   .rank {
-    font-size: 1.05rem;
-  }
+  width: 28px;
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(210, 91, 152, 0.42);
+  border-radius: 5px;
+
+  background: rgba(255,255,255,0.04);
+
+  color: #fff;
+
+  font-size: .78rem;
+  font-weight: 700;
+
+  flex-shrink: 0;
+}
 
   .rank-link div {
     min-width: 0;

@@ -5,14 +5,14 @@ export async function getRecommendationCount(slug: string): Promise<number> {
     .from("works")
     .select("recommendations")
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error("อ่านยอดแนะนำไม่สำเร็จ:", error);
     throw new Error("ไม่สามารถอ่านยอดแนะนำได้");
   }
 
-  return Number(data.recommendations ?? 0);
+  return Number(data?.recommendations ?? 0);
 }
 
 export async function addRecommendation(slug: string): Promise<number> {
