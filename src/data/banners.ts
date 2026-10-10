@@ -1,7 +1,7 @@
 export const banners = [
   {
     slug: "returning-chaebol-heir-delivers-sweet-revenge",
-    image: "/covers/chaebol.jpg",
+    image: "/covers/chaebol.png",
     active: true,
     priority: 1,
   },
@@ -18,8 +18,8 @@ export const banners = [
     priority: 3,
   },
   {
-    slug: "im-a-young-god-wont-you-raise-me",
-    image: "/covers/im-a-young-god-wont-you-raise-me.jpg",
+    slug: "the-reluctant-dictator-for-life",
+    image: "/covers/the-reluctant-dictator-for-life.png",
     active: true,
     priority: 4,
   },

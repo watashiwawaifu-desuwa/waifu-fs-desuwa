@@ -35,6 +35,10 @@ export const works = [
       id: "readtoon",
       url: "https://readtoon.com/content/surviving-the-assassin-academy-as-a-genius-professor-novel",
     },
+    {
+      id: "chaply",
+      url: "https://www.chaply.net/novels/surviving-the-assassin-academy-as-a-professor",
+    },
   ],
 },
   {
@@ -69,7 +73,7 @@ export const works = [
     type: "นิยาย",
     status: "กำลังอัปเดต",
     episode: 148,
-    cover: "/covers/chaebol.jpg",
+    cover: "/covers/chaebol.png",
     illustrations: [
   "/illustrations/returning-chaebol-heir-delivers-sweet-revenge/412.png",
   "/illustrations/returning-chaebol-heir-delivers-sweet-revenge/421.png",
@@ -91,6 +95,10 @@ export const works = [
       id: "readtoon",
       url: "https://readtoon.com/content/returning-chaebol-heir-delivers-sweet-revenge",
     },
+    {
+      id: "chaply",
+      url: "https://www.chaply.net/novels/returning-chaebol-heir-delivers-sweet-revenge",
+    },
   ],
 },
 {
@@ -99,7 +107,7 @@ export const works = [
     type: "นิยาย",
     status: "กำลังอัปเดต",
     episode: 0,
-    cover: "/covers/the-reluctant-dictator-for-life.jpg",
+    cover: "/covers/the-reluctant-dictator-for-life.png",
     recommendations: 0,
     description: "ชเว ยูจินแค่อยากหาเงินแล้วเกษียณอย่างสงบ แต่กลับต้องขึ้นเป็นผู้นำประเทศยากจน และยิ่งเขาพยายามบริหารอย่างมีเหตุผล ผู้คนกลับยิ่งยกให้เขาเป็นเผด็จการอัจฉริยะ!",
     tags: ["บริหารประเทศ", "คอมเมดี้", "การเข้าใจผิด", "อัจฉริยะ"],
@@ -116,6 +124,10 @@ export const works = [
     {
       id: "readtoon",
       url: "https://readtoon.com/content/the-reluctant-dictator-for-life",
+    },
+    {
+      id: "chaply",
+      url: "https://www.chaply.net/novels/the-reluctant-dictator-for-life",
     },
   ],
 },
@@ -145,6 +157,10 @@ export const works = [
       id: "readtoon",
       url: "https://readtoon.com/content/the-100-curses-of-illeston-mansion"
      },
+    {
+      id: "chaply",
+      url: "https://www.chaply.net/novels/the-100-curses-of-illeston-mansion",
+    },
   ],
 },
 ];

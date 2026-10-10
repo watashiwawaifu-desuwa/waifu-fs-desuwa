@@ -16,4 +16,10 @@ export const platforms = {
     logo: "/platforms/readtoon.png",
     color: "#8C44FF",
   },
+
+  chaply: {
+  name: "Chaply",
+  logo: "/platforms/chaply.png",
+  color: "#C5A832",
+},
 };
