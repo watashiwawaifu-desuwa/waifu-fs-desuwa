@@ -173,6 +173,9 @@ export const works = [
   illustrations: [
   "/illustrations/return-of-the-disaster-class-young-lord/20.png",
   "/illustrations/return-of-the-disaster-class-young-lord/27.png",
+  "/illustrations/return-of-the-disaster-class-young-lord/65.png",
+  "/illustrations/return-of-the-disaster-class-young-lord/66.png",
+  "/illustrations/return-of-the-disaster-class-young-lord/82.png",
 ],
   recommendations: 0,
   description: "ดีออน อันไลต์ คุณชายคนเล็กแห่งตระกูลขุนนางผู้ทรงอำนาจ ชายหนุ่มที่ถูกตราหน้าว่าเป็นความอัปยศของตระกูล เพราะไม่สามารถปลุกพลังได้เหมือนพี่น้องคนอื่น ทว่าเขากลับเป็นหนึ่งในผู้ที่ต่อสู้จนถึงวาระสุดท้ายของสงครามมหันตภัย หลังพ่ายแพ้ต่อสงครามมหันตภัยที่นำโลกไปสู่จุดจบ ดีออนก็ได้รับโอกาสหวนคืนสู่อดีตอีกครั้ง พร้อมความทรงจำและประสบการณ์จากชีวิตก่อน คราวนี้เขาจะไม่ยอมสูญเสียทุกสิ่งไปเหมือนที่ผ่านมา ด้วยพลังที่สามารถช่วงชิงอาชีพของผู้ที่ถูกสังหาร ดีออนจึงเริ่มต้นเส้นทางสู่ความแข็งแกร่ง เพื่อเปลี่ยนอนาคตที่กำลังรออยู่",
