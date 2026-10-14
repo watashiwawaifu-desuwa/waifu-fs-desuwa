@@ -163,4 +163,40 @@ export const works = [
     },
   ],
 },
+{
+  slug: "return-of-the-disaster-class-young-lord",
+  title: "การหวนคืนของคุณชายคนเล็กระดับมหันตภัย",
+  type: "นิยาย",
+  status: "กำลังอัปเดต",
+  episode: 0,
+  cover: "/covers/return-of-the-disaster-class-young-lord.png",
+  illustrations: [
+  "/illustrations/return-of-the-disaster-class-young-lord/20.png",
+  "/illustrations/return-of-the-disaster-class-young-lord/27.png",
+],
+  recommendations: 0,
+  description: "ดีออน อันไลต์ คุณชายคนเล็กแห่งตระกูลขุนนางผู้ทรงอำนาจ ชายหนุ่มที่ถูกตราหน้าว่าเป็นความอัปยศของตระกูล เพราะไม่สามารถปลุกพลังได้เหมือนพี่น้องคนอื่น ทว่าเขากลับเป็นหนึ่งในผู้ที่ต่อสู้จนถึงวาระสุดท้ายของสงครามมหันตภัย หลังพ่ายแพ้ต่อสงครามมหันตภัยที่นำโลกไปสู่จุดจบ ดีออนก็ได้รับโอกาสหวนคืนสู่อดีตอีกครั้ง พร้อมความทรงจำและประสบการณ์จากชีวิตก่อน คราวนี้เขาจะไม่ยอมสูญเสียทุกสิ่งไปเหมือนที่ผ่านมา ด้วยพลังที่สามารถช่วงชิงอาชีพของผู้ที่ถูกสังหาร ดีออนจึงเริ่มต้นเส้นทางสู่ความแข็งแกร่ง เพื่อเปลี่ยนอนาคตที่กำลังรออยู่",
+  tags: [
+    "แฟนตาซี", "แอคชั่น", "ผจญภัย", "ฮาเร็ม", "ย้อนเวลา", "สงคราม", "ฟิวชั่นแฟนตาซี"
+  ],
+
+  platforms: [
+    {
+      id: "kairew",
+      url: "https://kairew.com/novel/WatashiWa/8507-return-of-the-disaster-class-young-lord"
+    },
+    {
+      id: "readrealm",
+      url: "https://readrealm.co/novel/AJoDPvQORv89OX7xKbgy"
+    },
+    {
+      id: "readtoon",
+      url: "https://readtoon.com/content/return-of-the-disaster-class-young-lord"
+     },
+    {
+      id: "chaply",
+      url: "https://www.chaply.net/novels/return-of-the-disaster-class-young-lord",
+    },
+  ],
+},
 ];
