@@ -77,6 +77,8 @@ export const works = [
     illustrations: [
   "/illustrations/returning-chaebol-heir-delivers-sweet-revenge/412.png",
   "/illustrations/returning-chaebol-heir-delivers-sweet-revenge/421.png",
+  "/illustrations/returning-chaebol-heir-delivers-sweet-revenge/428.png",
+  "/illustrations/returning-chaebol-heir-delivers-sweet-revenge/568.png",
 ],
     recommendations: 0,
     description: "หลังถูกไล่ออกจากบริษัท ทั้งที่สร้างผลงานอันดับหนึ่ง ถูกหักหลังจากคนรอบตัว และสูญเสียทุกสิ่งในชีวิต ฮาแทอุงคิดว่าชีวิตของตัวเองจบลงแล้ว แต่โชคชะตากลับพลิกผัน เมื่อเขาได้รับเงินหนึ่งพันล้านวอนจากหญิงชราปริศนา ก่อนจะย้อนเวลากลับไปยังช่วงมัธยมปลาย พร้อมความทรงจำทั้งหมดจากอนาคต ชาตินี้เขาจะไม่เดินซ้ำรอยเดิม ด้วยความรู้เรื่องอนาคต เขาเริ่มกอบโกยความมั่งคั่งจากการลงทุน และค่อย ๆ เขย่าบัลลังก์ของเหล่าตระกูลแชโบลที่เคยเหยียบย่ำชีวิตเขา เกมล้างแค้นได้เริ่มต้นขึ้นแล้ว ครั้งนี้ เขาจะไม่ใช่เหยื่ออีกต่อไป แต่จะเป็นผู้กำหนดชะตาของทุกคนเอง",
